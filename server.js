@@ -176,6 +176,28 @@ const server = http.createServer((req, res) => {
       }
     }
 
+    // Add an album to a specific artist based on artistId
+    if (req.method === "POST" && req.url.startsWith("/artists/") && req.url.endsWith("/albums")) {
+      if (urlParts.length === 4) {
+        const artistId = urlParts[2];
+        const artist = artists[artistId]
+        if (artist) {
+          let albumId = getNewAlbumId();
+          const { name } = req.body;
+          albums[`${albumId}`] = {
+            albumId: albumId,
+            name: name,
+            artistId: artistId
+          }
+
+          res.statusCode = 201;
+          res.setHeader("Content-Type", "application/json");
+          res.write(JSON.stringify(albums[String(albumId)]))
+          return res.end();
+        }
+      }
+    }
+
     res.statusCode = 404;
     res.setHeader('Content-Type', 'application/json');
     res.write("Endpoint not found");
