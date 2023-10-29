@@ -220,10 +220,32 @@ const server = http.createServer((req, res) => {
         const album = albums[urlParts[2]];
         if (album) {
           delete albums[urlParts[2]];
+
           res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
           res.body = JSON.stringify({ "message": "Successfully deleted" });
           return res.end(res.body);
+        }
+      }
+    }
+
+    // Get all songs of a specific artist based on artistId
+    if (req.method === "GET" && req.url.startsWith('/artists/') && req.url.endsWith('/songs')) {
+      if (urlParts.length === 4) {
+        const artistId = urlParts[2];
+        const artist = artists[artistId];
+        if (artist) {
+          const songList = [];
+          for (const id in songs) {
+            let albumId = String(songs[id].albumId);
+            if (albums[albumId].artistId === Number(artistId)) {
+              songList.push(songs[id]);
+            }
+          }
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json");
+          res.write(JSON.stringify(songList));
+          return res.end();
         }
       }
     }
