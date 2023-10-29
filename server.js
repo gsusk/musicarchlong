@@ -214,6 +214,20 @@ const server = http.createServer((req, res) => {
       }
     }
 
+    // Delete a specified album by albumId
+    if (req.method === "DELETE" && req.url.startsWith('/albums/')) {
+      if (urlParts.length === 3) {
+        const album = albums[urlParts[2]];
+        if (album) {
+          delete albums[urlParts[2]];
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.body = JSON.stringify({ "message": "Successfully deleted" });
+          return res.end(res.body);
+        }
+      }
+    }
+
     res.statusCode = 404;
     res.setHeader('Content-Type', 'application/json');
     res.write("Endpoint not found");
