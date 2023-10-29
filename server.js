@@ -187,13 +187,29 @@ const server = http.createServer((req, res) => {
           albums[`${albumId}`] = {
             albumId: albumId,
             name: name,
-            artistId: artistId
+            artistId: Number(artistId)
           }
 
           res.statusCode = 201;
           res.setHeader("Content-Type", "application/json");
           res.write(JSON.stringify(albums[String(albumId)]))
           return res.end();
+        }
+      }
+    }
+
+    // Edit a specified album by albumId
+    if ((req.method === "PATCH" || req.method === "PUT") && req.url.startsWith("/albums/")) {
+      if (urlParts.length === 3) {
+        const albumId = urlParts[2];
+        const album = albums[albumId];
+        if (album) {
+          const { name } = req.body;
+          album.name = name || album.name
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json")
+          res.write(JSON.stringify(album))
+          return res.end()
         }
       }
     }
