@@ -269,6 +269,25 @@ const server = http.createServer((req, res) => {
       }
     }
 
+    // Get all songs of a specified trackNumber
+    if (req.method === "GET" && req.url.startsWith("/trackNumbers/")) {
+      if (urlParts.length === 3) {
+        const trackSongs = [];
+        for (const id in songs) {
+          if (songs[id].trackNumber === Number(urlParts[2])) {
+            trackSongs.push(songs[id])
+          }
+        }
+
+        res.status === 200;
+        res.setHeader("Content-Type", "application/json")
+        res.write(JSON.stringify(trackSongs))
+        return res.end();
+      }
+    }
+
+    // Get a specific song's details based on songId
+
     res.statusCode = 404;
     res.setHeader('Content-Type', 'application/json');
     res.write("Endpoint not found");
