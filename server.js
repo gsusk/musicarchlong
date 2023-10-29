@@ -119,7 +119,6 @@ const server = http.createServer((req, res) => {
         if (artist) {
           const { name } = req.body;
           artist.name = name || artist.name;
-          console.log(artists)
           res.statusCode = 200;
           res.setHeader("Content-Type", "application/json")
           res.body = JSON.stringify({ ...artist, lastUpdated: new Date().toDateString() });
@@ -144,6 +143,30 @@ const server = http.createServer((req, res) => {
           res.body = JSON.stringify({ message: "succesfull deletion" })
           return res.end(res.body)
         }
+      }
+    }
+
+    //// Get all albums of a specific artist based on artistId
+    if (req.method === "GET" && req.url.startsWith("/artists/") && req.url.endsWith("/albums")) {
+      if (urlParts.length === 4) {
+        const artistId = urlParts[2];
+        const artist = artists[artistId];
+        console.log('test')
+
+        if (artist) {
+          let artistAlbums = [];
+          for (let id in albums) {
+            if (albums[id].artistId === artistId) {
+              artistAlbums.push(albums[id])
+            }
+          }
+          console.log('test')
+          res.statusCode = 200;
+          res.setHeader("Content-Type")
+          res.body = JSON.stringify(artistAlbums)
+          return res.end(res.body)
+        }
+        console.log('test')
       }
     }
 
