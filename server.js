@@ -68,7 +68,16 @@ const server = http.createServer((req, res) => {
     /* ========================== ROUTE HANDLERS ========================== */
 
     // Your code here
+    if (req.method === "GET" && req.url.startsWith('/artists/')) {
+      let url = req.url.split('/')
+      if (url.length === 3) {
 
+      }
+
+      res.statusCode = 404;
+      res.setHeader("Content-Type", "application/json")
+      return res.end(JSON.stringify({ message: "hola" }))
+    }
     res.statusCode = 404;
     res.setHeader('Content-Type', 'application/json');
     res.write("Endpoint not found");
