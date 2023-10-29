@@ -90,11 +90,6 @@ const server = http.createServer((req, res) => {
           return res.end(res.body);
         }
       }
-
-      res.statusCode = 404;
-      res.setHeader("Content-Type", "application/json")
-      res.write("Endpoint not found");
-      return res.end();
     }
 
     //add an artist
@@ -151,22 +146,33 @@ const server = http.createServer((req, res) => {
       if (urlParts.length === 4) {
         const artistId = urlParts[2];
         const artist = artists[artistId];
-        console.log('test')
 
         if (artist) {
           let artistAlbums = [];
           for (let id in albums) {
-            if (albums[id].artistId === artistId) {
+            if (albums[id].artistId === Number(artistId)) {
               artistAlbums.push(albums[id])
             }
           }
-          console.log('test')
           res.statusCode = 200;
-          res.setHeader("Content-Type")
-          res.body = JSON.stringify(artistAlbums)
-          return res.end(res.body)
+          res.setHeader("Content-Type", "application/json")
+          res.write(JSON.stringify(artistAlbums))
+          return res.end()
         }
-        console.log('test')
+      }
+    }
+
+    // Get a specific album's details based on albumId
+    if (req.method === "GET" && req.url.startsWith("/albums/")) {
+      if (urlParts.length === 3) {
+        const albumId = urlParts[2];
+        const album = albums[albumId];
+        if (album) {
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json")
+          res.write(JSON.stringify(album))
+          return res.end();
+        }
       }
     }
 
