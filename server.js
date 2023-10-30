@@ -287,6 +287,17 @@ const server = http.createServer((req, res) => {
     }
 
     // Get a specific song's details based on songId
+    if (req.method === "GET" && req.url.startsWith("/songs/")) {
+      if (urlParts.length === 3) {
+        const song = songs[urlParts[2]];
+        if (song) {
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json");
+          res.write(JSON.stringify(song));
+          return res.end();
+        }
+      }
+    }
 
     res.statusCode = 404;
     res.setHeader('Content-Type', 'application/json');
