@@ -322,6 +322,27 @@ const server = http.createServer((req, res) => {
       }
     }
 
+    // Edit a specified song by songId
+    if ((req.method === "PUT" || req.method === "POST") && req.url.startsWith("/songs/")) {
+      if (urlParts.length === 3) {
+        const songId = urlParts[2];
+        const song = songs[songId];
+        if (song) {
+          const { name, trackNumber, lyrics } = req.body;
+          songs[songId] = {
+            ...song,
+            name: name,
+            trackNumber: Number(trackNumber),
+            lyrics: lyrics
+          }
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json")
+          res.write(JSON.stringify(songs))
+          return res.end();
+        }
+      }
+    }
+
     res.statusCode = 404;
     res.setHeader('Content-Type', 'application/json');
     res.write("Endpoint not found");
