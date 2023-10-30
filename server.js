@@ -344,7 +344,7 @@ const server = http.createServer((req, res) => {
     }
 
     // Delete a specified song by songId
-    if (req.method === "DELETE" && req.method.url.startsWith('/songs/')) {
+    if (req.method === "DELETE" && req.url.startsWith('/songs/')) {
       if (urlParts.length === 3) {
         const songId = urlParts[2];
         const song = songs[songId];
