@@ -260,11 +260,11 @@ const server = http.createServer((req, res) => {
             if (songs[id].albumId === Number(urlParts[2])) {
               songList.push(songs[id])
             }
-            res.statusCode === 200;
-            res.setHeader("Content-Type", "application/json");
-            res.write(JSON.stringify(songList));
-            return res.end();
           }
+          res.statusCode === 200;
+          res.setHeader("Content-Type", "application/json");
+          res.write(JSON.stringify(songList));
+          return res.end();
         }
       }
     }
@@ -294,6 +294,29 @@ const server = http.createServer((req, res) => {
           res.statusCode = 200;
           res.setHeader("Content-Type", "application/json");
           res.write(JSON.stringify(song));
+          return res.end();
+        }
+      }
+    }
+
+    // Add a song to a specific album based on albumId
+    if (req.method === "POST" && req.url.startsWith("/albums/") && req.url.endsWith("/songs")) {
+      if (urlParts.length === 4) {
+        const albumId = urlParts[2];
+        const album = albums[albumId];
+        if (album) {
+          let { name, trackNumber, lyrics } = req.body;
+          let songId = getNewSongId();
+          songs[String(songId)] = {
+            songId: songId,
+            name: name,
+            trackNumber: Number(trackNumber),
+            albumId: Number(albumId),
+            lyrics: lyrics
+          }
+          res.statusCode = 201;
+          res.setHeader("Content-Type", "application/json")
+          res.write(JSON.stringify(songs[songId]))
           return res.end();
         }
       }
